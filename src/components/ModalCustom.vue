@@ -21,17 +21,11 @@
           <slot name="body" />
         </div>
         <div class="modal-footer">
-            <slot name="footer">
-                
+            <button type="button" class="btn btn-secondary fechar-editar" data-bs-dismiss="modal" @click="close" >
+              Fechar
+            </button>
+            <slot name="footer"> 
             </slot>
-            <button
-            type="button"
-            class="btn btn-secondary"
-            data-bs-dismiss="modal"
-            @click="close"
-            >
-            Fechar
-          </button>
         </div>
       </div>
     </div>
@@ -47,3 +41,9 @@ export default {
   },
 };
 </script>
+<style scoped>
+
+.fechar-editar{
+    background-color: rgb(221, 15, 15);
+}
+</style>

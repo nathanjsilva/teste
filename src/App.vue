@@ -1,17 +1,19 @@
 <template>
 <div>
-  <img alt="Vue logo" src="./assets/logo.png">
+  <NavbarPage />
   <HomePage />
 </div>
 </template>
 
 <script>
 import HomePage from './view/HomePage.vue'
+import NavbarPage from './view/NavbarPage.vue'
 
 export default {
   name: 'App',
   components: {
-    HomePage
+    HomePage,
+    NavbarPage
   }
 }
 </script>
@@ -23,6 +25,5 @@ export default {
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #2c3e50;
-  margin-top: 60px;
 }
 </style>

@@ -2,16 +2,10 @@
   <div class="container">
     <div class="header">
       <h2>Pedidos</h2>
-      <!-- Button trigger modal -->
-      <button
-        type="button"
-        class="btn btn-primary"
-        data-bs-toggle="modal"
-        data-bs-target="#exampleModal"
-      >
+      <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalForm">
         Criar Pedido
       </button>
-      <!-- Modal -->
+      <ModalForm />
     </div>
     <table class="table" v-if="todosPedidos">
       <thead>
@@ -37,22 +31,11 @@
           <td>{{ pedido.valor_sanduiche }}</td>
           <td>{{ pedido.status_pedido }}</td>
           <td>{{ pedido.valor_total }}</td>
-          <td>
-            <button
-              class="btn excluir"
-              type="button"
-              data-bs-toggle="modal"
-              data-bs-target="#modalAtualizar"
-              @click="this.pedido_id = pedido.id"
-            >
-              X</button
-            ><button
-              class="btn ver"
-              type="button"
-              data-bs-toggle="modal"
-              data-bs-target="#modalAtualizar"
-              @click="this.pedido = pedido"
-            >
+          <td class="botao">
+            <button class="btn excluir" type="button" data-bs-toggle="modal" data-bs-target="#modalExcluir" @click="this.pedido_id = pedido.id">
+              <strong>X</strong>
+            </button>
+            <button class="btn ver" type="button" data-bs-toggle="modal" data-bs-target="#modalAtualizar" @click="this.pedido = pedido">
               V
             </button>
           </td>
@@ -64,14 +47,14 @@
         <span class="sr-only"></span>
       </div>
     </div>
-    <ModalMensagem
+    <ModalMensagem 
       msg="Deseja realmente cancelar esse pedido?"
       :callback="deleteBurger"
     />
 
     <ModalCustom v-show="isModalVisible" @close="closeModal">
       <template v-slot:body>
-        <select v-model="novoStatus">
+        <select v-model="novoStatus"  class="form-select">
           <option selected disabled value="">---Selecione um status---</option>
           <option>Preparação</option>
           <option>Realizando</option>
@@ -79,14 +62,8 @@
         </select>
       </template>
       <template v-slot:footer>
-        <button
-          type="button"
-          class="btn btn-primary"
-          @click="updateBurguer(pedido.id)"
-          data-bs-dismiss="modal"
-
-        >
-          Save changes
+        <button type="button" class="btn btn-primary editar" @click="updateBurguer(pedido.id)" data-bs-dismiss="modal">
+          Salvar
         </button>
       </template>
     </ModalCustom>
@@ -95,12 +72,14 @@
 <script>
 import ModalMensagem from "../components/ModalMensagem.vue";
 import ModalCustom from "../components/ModalCustom.vue";
+import ModalForm from "../components/ModalForm.vue";
 
 export default {
   name: "HomePage",
   components: {
     ModalMensagem,
     ModalCustom,
+    ModalForm
   },
   mounted() {
     this.getPedidos();
@@ -130,9 +109,8 @@ export default {
       console.log("pedidos", this.todosPedidos);
     },
     async deleteBurger() {
-      console.log("entrei", this.pedido_id);
       const req = await fetch(
-        `http://localhost:3000/burgers/${this.pedido_id}`,
+        `http://127.0.0.1:8000/api/deletar/pedido/${this.pedido_id}`,
         {
           method: "DELETE",
         }
@@ -178,5 +156,20 @@ export default {
 .ver {
   font-weight: 900;
   color: green;
+}
+
+.btn-primary {
+  background-color: #222;
+  border-bottom: 4px solid #111;
+}
+.botao {
+  width: 10%;
+}
+.table {
+  width: 100%;
+}
+
+.editar {
+    background-color: #222;
 }
 </style>
