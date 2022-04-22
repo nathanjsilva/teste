@@ -1,9 +1,10 @@
 <template>
     <div>
         <div id="nav">
-        <router-link id="logo-url" to="/">
+          <strong for="">Black Burguer</strong>
+          <router-link id="logo-url" to="/">
             <img id="logo" src="../../public/img/logo.png">
-            </router-link>
+          </router-link>
         </div>
     </div>
 </template>
@@ -36,14 +37,14 @@ export default {
     height: 40px;
   }
 
-  #nav a {
+  #nav strong {
     color: #fcba03;
     text-decoration: none;
     margin: 12px;
     transition: .5s;
   }
 
-  #nav a:hover {
+  #nav strong:hover {
     color: #FFF;
   }
 </style>

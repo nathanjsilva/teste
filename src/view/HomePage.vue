@@ -2,41 +2,45 @@
   <div class="container">
     <div class="header">
       <h2>Pedidos</h2>
-      <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalForm">
-        Criar Pedido
+      <button type="button" class="btn enviarPedido" data-bs-toggle="modal" data-bs-target="#modalForm" data-toggle="tooltip" title="Fazer Pedido">
+        <Food />
+      </button>
+      <button type="button" class="btn cardapio" data-bs-toggle="modal" data-toggle="tooltip" title="Cardápio" data-bs-target="#modalCardapio">
+          <MenuIcon />
       </button>
       <ModalForm />
+      <ModalCardapio />
     </div>
     <table class="table" v-if="todosPedidos">
       <thead>
         <tr>
-          <th scope="col">#</th>
-          <th scope="col">Nome Cliente</th>
-          <th scope="col">Documento Cliente</th>
-          <th scope="col">Nome Sanduíche</th>
-          <th scope="col">Quantidade Sanduíche</th>
-          <th scope="col">Valor Sanduíche</th>
-          <th scope="col">Status Pedido</th>
-          <th scope="col">Valor Total</th>
-          <th scope="col">Ação</th>
+          <th  class="text-center" scope="col">#</th>
+          <th  class="text-center" scope="col">Nome Cliente</th>
+          <th  class="text-center" scope="col">Documento</th>
+          <th  class="text-center" scope="col">Nome</th>
+          <th  class="text-center" scope="col">Quantidade</th>
+          <th  class="text-center" scope="col">Valor Sanduíche</th>
+          <th  class="text-center" scope="col">Status Pedido</th>
+          <th  class="text-center" scope="col">Valor Total</th>
+          <th  class="text-center" scope="col">Ação</th>
         </tr>
       </thead>
       <tbody>
         <tr v-for="pedido in todosPedidos" :key="pedido.id">
-          <td>{{ pedido.id }}</td>
-          <td>{{ pedido.nome_cliente }}</td>
-          <td>{{ pedido.documento_cliente }}</td>
-          <td>{{ pedido.nome_sanduiche }}</td>
-          <td>{{ pedido.qtd_sanduiche }}</td>
-          <td>{{ pedido.valor_sanduiche }}</td>
-          <td>{{ pedido.status_pedido }}</td>
-          <td>{{ pedido.valor_total }}</td>
+          <td class="text-center">{{ pedido.id }}</td>
+          <td class="text-center">{{ pedido.nome_cliente }}</td>
+          <td class="text-center">{{ pedido.documento_cliente }}</td>
+          <td class="text-center">{{ pedido.nome_sanduiche }}</td>
+          <td class="text-center">{{ pedido.qtd_sanduiche }}</td>
+          <td class="text-center">{{ pedido.valor_sanduiche }}</td>
+          <td class="text-center">{{ pedido.status_pedido }}</td>
+          <td class="text-center">{{ pedido.valor_total }}</td>
           <td class="botao">
-            <button class="btn excluir" type="button" data-bs-toggle="modal" data-bs-target="#modalExcluir" @click="this.pedido_id = pedido.id">
-              <strong>X</strong>
+            <button class="btn excluir" type="button" data-bs-toggle="modal" data-bs-target="#modalExcluir" data-toggle="tooltip" title="Excluir Pedido" @click="this.pedido_id = pedido.id">
+              <TrashCan />
             </button>
-            <button class="btn ver" type="button" data-bs-toggle="modal" data-bs-target="#modalAtualizar" @click="this.pedido = pedido">
-              V
+            <button class="btn ver" type="button" data-bs-toggle="modal" data-bs-target="#modalAtualizar" data-toggle="tooltip" title="Atualizar Pedido" @click="this.pedido = pedido">
+              <Update />
             </button>
           </td>
         </tr>
@@ -56,7 +60,7 @@
       <template v-slot:body>
         <select v-model="novoStatus"  class="form-select">
           <option selected disabled value="">---Selecione um status---</option>
-          <option>Preparação</option>
+          <option>A fazer</option>
           <option>Realizando</option>
           <option>Finalizado</option>
         </select>
@@ -73,14 +77,25 @@
 import ModalMensagem from "../components/ModalMensagem.vue";
 import ModalCustom from "../components/ModalCustom.vue";
 import ModalForm from "../components/ModalForm.vue";
+import ModalCardapio from '../components/ModalCardapio.vue';
+import MenuIcon from 'vue-material-design-icons/Menu.vue';
+import Food from 'vue-material-design-icons/Food.vue';
+import TrashCan from 'vue-material-design-icons/TrashCan.vue';
+import Update from 'vue-material-design-icons/Update.vue';
 
 export default {
   name: "HomePage",
   components: {
     ModalMensagem,
     ModalCustom,
-    ModalForm
+    ModalForm,
+    ModalCardapio,
+    MenuIcon,
+    Food,
+    TrashCan,
+    Update
   },
+  
   mounted() {
     this.getPedidos();
   },
@@ -95,19 +110,20 @@ export default {
     };
   },
   methods: {
+    
     showModal() {
       this.isModalVisible = true;
     },
     closeModal() {
       this.isModalVisible = false;
     },
+
     async getPedidos() {
       const req = await fetch("http://127.0.0.1:8000/api/pedidos");
       const data = await req.json();
-      console.log(data);
       this.todosPedidos = data.data;
-      console.log("pedidos", this.todosPedidos);
     },
+
     async deleteBurger() {
       const req = await fetch(
         `http://127.0.0.1:8000/api/deletar/pedido/${this.pedido_id}`,
@@ -116,12 +132,13 @@ export default {
         }
       );
 
-      // eslint-disable-next-line
-      const res = await req.json();
-      this.getPedidos();
+      const status = req.status
+      status == 200 ? this.$toast.success(`Pedido excluído com sucesso`) :  this.$toast.error("Ocorreu um erro ao excluir o pedido")
+      setTimeout(this.$toast.clear, 2000)
+      location.reload();
     },
+    
     async updateBurguer(id) {
-      console.log("entrei", id, this.novoStatus);
       const dataJson = JSON.stringify({status_pedido: this.novoStatus});
       const req = await fetch(
         `http://127.0.0.1:8000/api/atualizar/pedido/${id}`,
@@ -133,43 +150,56 @@ export default {
       );
 
       // eslint-disable-next-line
-      const res = await req.json()
-      console.log(res)
-      this.getPedidos();
+      const status = req.status
+      status == 200 ? this.$toast.success(`Pedido atualizado com sucesso`, {position: 'top'}) :  this.$toast.error("Ocorreu um erro ao atualizar o pedido")
+      setTimeout(this.$toast.clear, 2000)
+      location.reload()
     },
   },
 };
 </script>
-<!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-.header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
+  .header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
 
-.excluir {
-  font-weight: 900;
-  color: red;
-}
+  .excluir {
+    font-weight: 500;
+    color: red;
+  }
 
-.ver {
-  font-weight: 900;
-  color: green;
-}
+  .cardapio {
+    background-color: rgb(221, 15, 15);
+    color: rgb(255, 255, 255);
 
-.btn-primary {
-  background-color: #222;
-  border-bottom: 4px solid #111;
-}
-.botao {
-  width: 10%;
-}
-.table {
-  width: 100%;
-}
+  }
 
-.editar {
+  .enviarPedido {
+    margin-left: 80%;
     background-color: #222;
-}
+    color: rgb(255, 251, 3);
+
+  }
+
+  .ver {
+    font-weight: 500;
+    color: green;
+  }
+
+  .btn-primary {
+    background-color: #222;
+    border-bottom: 4px solid #111;
+  }
+  .botao {
+    width: 11%;
+  }
+  .table {
+    width: 100%;
+  }
+
+  .editar {
+      background-color: #222;
+  }
 </style>

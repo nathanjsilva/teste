@@ -18,7 +18,7 @@
         </div>
         <div class="modal-footer">
             <button type="button" class="btn btn-secondary fechar" data-bs-dismiss="modal">Fechar</button>
-            <button type="button" class="btn btn-primary" data-bs-dismiss="modal"  @click="callback">Excluir Pedido</button>
+            <button type="button" class="btn btn-primary" @click="callback">Excluir Pedido</button>
         </div>
       </div>
     </div>
