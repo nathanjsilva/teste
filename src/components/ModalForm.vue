@@ -94,7 +94,7 @@ export default {
                 nome_sanduiche: this.nome_sanduiche,
                 qtd_sanduiche: this.qtd_sanduiche,
                 valor_sanduiche: this.valor_sanduiche,
-                status_pedido: "Pagamento",
+                status_pedido: "A fazer",
             };
         
             const dataJson = JSON.stringify(data);

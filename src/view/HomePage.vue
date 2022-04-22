@@ -47,8 +47,8 @@
       </tbody>
     </table>
     <div v-else>
-      <div class="spinner-border" role="status">
-        <span class="sr-only"></span>
+      <div class="text-center">
+        <span ><strong>Não há pedidos a serem exibidos.</strong></span>
       </div>
     </div>
     <ModalMensagem 
@@ -133,7 +133,7 @@ export default {
       );
 
       const status = req.status
-      status == 200 ? this.$toast.success(`Pedido excluído com sucesso`) :  this.$toast.error("Ocorreu um erro ao excluir o pedido")
+      status == 200 ? this.$toast.success(`Pedido excluído com sucesso`, {position: 'top'}) :  this.$toast.error("Ocorreu um erro ao excluir o pedido")
       setTimeout(this.$toast.clear, 2000)
       location.reload();
     },
